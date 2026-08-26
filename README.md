@@ -1,22 +1,19 @@
 # @pipeworx/eurostat
 
-Eurostat MCP — EU statistics (demographics, economy, trade, environment, employment). No auth.
+Eurostat MCP — official EU statistics (economy, prices, labour, population, migration, trade, energy, environment, tourism). No auth.
 
-Part of [Pipeworx](https://pipeworx.io) — an MCP gateway connecting AI agents to 1394+ live data sources.
+Part of [Pipeworx](https://pipeworx.io) — an MCP gateway connecting AI agents to 1476+ live data sources.
 
 ## Tools
 
-- `get_data(dataset_code, filters?, time?, lang?)` — fetch observations from a dataset
-- `get_dataset_metadata(dataset_code, lang?)` — dimensions + code lists
-- `search_datasets(query, lang?)` — keyword search across the catalogue
+- `get_dataset(dataset_code, geo?, time?)` — fetch observations from a dataset, e.g. `get_dataset({ dataset_code: "une_rt_m", geo: "DE", time: "2025-06" })` (time formats: `2023`, `2023-01`, `2023-Q1` — the compact `2023M01`/`2023Q1` styles are normalized automatically)
+- `search_datasets(query)` — keyword search across the full Eurostat table of contents (~10,000 datasets and tables); returns codes to pass to `get_dataset`
+- `list_datasets()` — curated list of ~19 popular dataset codes grouped by theme
 
-## Data source
+## Data sources
 
-- Data: `https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/<dataset_code>?<filters>&format=JSON`
-- Metadata: `https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/datastructure/ESTAT/<dataset_code>?format=JSON`
-- Catalogue: `https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/dataflow/ESTAT/all/latest?format=JSON`
-
-Filter syntax: dimension values as query params. E.g. `?geo=DE&geo=FR&time=2023`. Multiple values repeat the param.
+- Data: `https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/<dataset_code>?format=JSON&lang=en` (filters as query params, e.g. `&geo=DE&time=2023`)
+- Catalogue: `https://ec.europa.eu/eurostat/api/dissemination/catalogue/toc/txt?lang=en` — the full table-of-contents TSV, fetched edge-cached (6h) and filtered in the pack. The old `catalogue/toc?searchText=` search endpoint was retired by Eurostat (404s unconditionally as of 2026-08); the TSV download is the supported discovery path.
 
 ## Quick Start
 
@@ -32,7 +29,25 @@ Add to your MCP client (Claude Desktop, Cursor, Windsurf, etc.):
 }
 ```
 
-Or connect to the full Pipeworx gateway for access to all 1394+ data sources:
+### What this endpoint actually serves
+
+`tools/list` at `https://gateway.pipeworx.io/eurostat/mcp` returns the tools in the table
+above **plus the shared Pipeworx meta-tools** — `ask_pipeworx`,
+`discover_tools`, `search_within`, `remember`/`recall` and the rest of the
+gateway-wide set. So the tool count you see is larger than this table: a
+single-pack endpoint currently lists roughly 30 shared tools alongside the
+pack's own. The connection's `initialize` response states its exact scope, and
+is the authoritative answer for a given day.
+
+This is deliberate, not multiplexing by accident. The meta-tools are what let a
+scoped connection answer a question this pack does not cover — via
+`ask_pipeworx`, which routes across the whole catalog — without you adding a
+second MCP server. There is currently no way to mount a pack endpoint without
+them; if the extra schemas cost you more context than the routing is worth,
+connect to the full gateway once rather than to several pack endpoints.
+
+Or connect to the full Pipeworx gateway to get every pack's tools listed
+directly, instead of just this one's:
 
 ```json
 {
@@ -44,9 +59,14 @@ Or connect to the full Pipeworx gateway for access to all 1394+ data sources:
 }
 ```
 
+Both URLs reach the same gateway and the same 1476+ data sources. The
+only difference is which pack's tools are listed **directly**; `ask_pipeworx`
+reaches all of them from either one.
+
 ## Using with ask_pipeworx
 
-Instead of calling tools directly, you can ask questions in plain English:
+Instead of calling tools directly, you can ask questions in plain English —
+this works on the pack endpoint above as well as on the full gateway:
 
 ```
 ask_pipeworx({ question: "your question about Eurostat data" })
