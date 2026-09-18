@@ -82,3 +82,13 @@ The gateway picks the right tool and fills the arguments automatically.
 ## License
 
 MIT
+
+## No MCP client? Call it over HTTP
+
+```bash
+curl -X POST https://gateway.pipeworx.io/v1/tools/eurostat_get_dataset \
+  -H 'Content-Type: application/json' \
+  -d '{"dataset_code":"nama_10_gdp","geo":"DE","time":"2023"}'
+```
+
+No account needed for the first calls. Inspect any tool: `GET https://gateway.pipeworx.io/v1/tools/eurostat_get_dataset`. Find one: `POST https://gateway.pipeworx.io/v1/tools/search_packs` with `{"query":"..."}`.
