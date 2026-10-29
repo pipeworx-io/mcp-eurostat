@@ -1,12 +1,20 @@
 {
   "name": "@pipeworx/mcp-eurostat",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "Eurostat MCP — wraps Eurostat Statistical Data API (no auth required)",
   "type": "module",
-  "main": "src/index.ts",
-  "types": "src/index.ts",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./tools.json": "./tools.json",
+    "./package.json": "./package.json"
+  },
   "bin": {
     "mcp-eurostat": "bin/cli.js"
+  },
+  "files": ["bin/", "lib/", "tools.json", "server.json"],
+  "engines": {
+    "node": ">=18"
   },
   "keywords": ["mcp", "mcp-server", "model-context-protocol", "pipeworx", "eurostat"],
   "license": "MIT",
@@ -14,19 +22,12 @@
     "type": "git",
     "url": "git+https://github.com/pipeworx-io/mcp-eurostat.git"
   },
-  "scripts": {
-    "typecheck": "tsc --noEmit"
-  },
-  "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.30.0",
-    "tsx": "^4.19.0"
-  },
-  "devDependencies": {
-    "typescript": "^5.9.3",
-    "@cloudflare/workers-types": "^4.20260405.1"
-  },
+  "mcpName": "io.github.pipeworx-io/eurostat",
   "pipeworx": {
-    "sourceHash": "v1-9333b07d75480f57b37ff6cf5e3850b80da53dd3b43a1b8fdd8c1b61d4c2ec9d",
-    "sourceCommit": "722087a9bda73f85942e8f6bbfd598544cb0d490"
+    "mode": "gateway",
+    "slug": "eurostat",
+    "gatewaySlug": "eurostat",
+    "sourceHash": "v1-e38966a37dccb9c3b5ecfbd572b900b240f1393fea49c8373c3973030af49601",
+    "sourceCommit": "bb047243cf27f32453103de186b8e6a8b6a1ce79"
   }
 }
