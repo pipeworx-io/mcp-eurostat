@@ -1,6 +1,6 @@
 {
   "name": "@pipeworx/mcp-eurostat",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Eurostat MCP — wraps Eurostat Statistical Data API (no auth required)",
   "type": "module",
   "main": "lib/index.js",
@@ -27,7 +27,7 @@
     "mode": "gateway",
     "slug": "eurostat",
     "gatewaySlug": "eurostat",
-    "sourceHash": "v1-e38966a37dccb9c3b5ecfbd572b900b240f1393fea49c8373c3973030af49601",
-    "sourceCommit": "06a6b405041923c5ddf2ac2436e7c049e635f464"
+    "sourceHash": "v1-c23a775120d73ea20ea0d7868777b2e7a9ac875f6e3e045c943ad5862417f52e",
+    "sourceCommit": "d35e32c1ffe988e24d391dedb35666387fd2b3d6"
   }
 }
